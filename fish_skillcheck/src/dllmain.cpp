@@ -31,6 +31,9 @@ bool main() {
 			position = shared::pixel::find_position(device_context, { 812, 1027 }, { 300, 1 });
 		}
 
+		if (!position.first)
+			continue;
+
 		const auto pixel = GetPixel(device_context, position.first, position.second);
 
 		shared::color::c_color<int> color{ (pixel >> 16) & 0xff, (pixel >> 8) & 0xff, pixel & 0xff };
