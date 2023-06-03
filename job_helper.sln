@@ -5,7 +5,7 @@ VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "shared", "shared\shared.vcxproj", "{8A4686DE-39DA-4D9F-AF41-091EB8032BDE}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fish_skillcheck", "fish_skillcheck\fish_skillcheck.vcxproj", "{9FB0C85F-98D9-47A0-B1E3-6277379CF6C9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fish", "fish\fish.vcxproj", "{9FB0C85F-98D9-47A0-B1E3-6277379CF6C9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "electrician", "electrician\electrician.vcxproj", "{E04AE391-E517-4C11-BB9E-59F642D260AA}"
 EndProject

@@ -5,16 +5,16 @@ namespace shared::pixel {
         const auto stride = size.first * 4;
         std::vector<std::uint8_t> pixels(stride);
 
-        const auto compatible_dc = CreateCompatibleDC(device_context);
-        const auto compatible_bitmap = CreateCompatibleBitmap(device_context, size.first, size.second);
+        const auto device_context_target = CreateCompatibleDC(device_context);
+        const auto handle_bitmap_target = CreateCompatibleBitmap(device_context, size.first, size.second);
 
-        SelectObject(compatible_dc, compatible_bitmap);
+        SelectObject(device_context_target, handle_bitmap_target);
 
-        BitBlt(compatible_dc, 0, 0, size.first, size.second, device_context, position.first, position.second, SRCCOPY);
-        GetBitmapBits(compatible_bitmap, stride, pixels.data());
+        BitBlt(device_context_target, 0, 0, size.first, size.second, device_context, position.first, position.second, SRCCOPY);
+        GetBitmapBits(handle_bitmap_target, stride, pixels.data());
 
-        DeleteObject(compatible_bitmap);
-        DeleteDC(compatible_dc);
+        DeleteObject(handle_bitmap_target);
+        DeleteDC(device_context_target);
 
         for (int i = 0; i < size.first; i++) {
             const auto pixel = *reinterpret_cast<std::uint32_t*>(pixels.data() + i * 4);
@@ -23,6 +23,38 @@ namespace shared::pixel {
             if (color.r_between(20, 50) && color.g_between(140, 220) && color.b_between(80, 150)) {
                 spdlog::info("found color ({}, {}, {}) at ({}, {})", color.r, color.g, color.b, position.first + i + 15, position.second);
                 return { position.first + i + 15, position.second };
+            }
+        }
+
+        return { 0, 0 };
+    }
+
+    inline std::pair<int, int> find_position_in_rectangle(const HDC device_context, const std::pair<int, int> size) {
+        const auto stride = size.first * 4;
+        std::vector<std::uint8_t> pixels(stride * size.second);
+
+        const auto device_context_target = CreateCompatibleDC(device_context);
+        const auto handle_bitmap_target = CreateCompatibleBitmap(device_context, size.first, size.second);
+
+        SelectObject(device_context_target, handle_bitmap_target);
+
+        BitBlt(device_context_target, 0, 0, size.first, size.second, device_context, 0, 0, SRCCOPY);
+        GetBitmapBits(handle_bitmap_target, stride * size.second, pixels.data());
+
+        DeleteObject(handle_bitmap_target);
+        DeleteDC(device_context_target);
+
+        for (int y = 0; y < size.second; y++) {
+            for (int x = 0; x < size.first; x++) {
+                const auto pixel = *reinterpret_cast<std::uint32_t*>(pixels.data() + (y * stride) + (x * 4));
+
+                // 21, 207, 30
+
+                shared::color::c_color<int> color{ (pixel >> 16) & 0xff, (pixel >> 8) & 0xff, pixel & 0xff };
+                if (color.r_between(15, 30) && color.g_between(200, 215) && color.b_between(20, 40)) {
+                    spdlog::info("found color ({}, {}, {}) at ({}, {})", color.r, color.g, color.b, x + 15, y);
+                    return { x + 15, y };
+                }
             }
         }
 

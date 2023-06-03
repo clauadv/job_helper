@@ -12,13 +12,16 @@
   <ItemGroup>
     <None Include="readme.md" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\captcha\captcha.hpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{9FB0C85F-98D9-47A0-B1E3-6277379CF6C9}</ProjectGuid>
-    <RootNamespace>fish_skillcheck</RootNamespace>
+    <RootNamespace>fish</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>fish_skillcheck</ProjectName>
+    <ProjectName>fish</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='production|x64'" Label="Configuration">
@@ -41,8 +44,8 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)$(Configuration)\$(ProjectName)\intermediates\</IntDir>
-    <IncludePath>$(SolutionDir)\shared\;$(SolutionDir)\shared\third_party\spdlog\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)$(Configuration)\shared\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\shared\;$(SolutionDir)\shared\third_party\spdlog\include\;C:\vcpkg\installed\x64-windows\include;C:\vcpkg\installed\x64-windows\include\leptonica;C:\vcpkg\installed\x64-windows\include\tesseract;C:\Program Files\OpenCV\opencv\build\include;C:\Program Files\OpenCV\opencv\build\include\opencv2;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)$(Configuration)\shared\;C:\Program Files\OpenCV\opencv\build\x64\vc16\lib;C:\vcpkg\installed\x64-windows\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='production|x64'">
     <ClCompile>
@@ -52,14 +55,14 @@
       <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <Optimization>MinSpace</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <ControlFlowGuard>false</ControlFlowGuard>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -72,7 +75,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_world470.lib;tesseract53.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
