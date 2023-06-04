@@ -1,6 +1,9 @@
 # job_helper
 automation for interactive jobs on liberty.mp (ragemp)
 
+## support
+if you have any questions, [discord server](https://discord.gg/K7RNp2vtVq)
+
 ## showcase
 <details>
   <summary>electrician</summary>
