@@ -8,7 +8,6 @@ bool main() {
     const auto device_context = GetDC(nullptr);
     if (!device_context) {
         spdlog::error("failed to get device_context");
-
         std::this_thread::sleep_for(std::chrono::seconds(5));
 
         return true;
@@ -17,7 +16,13 @@ bool main() {
     const std::pair<int, int> screen_resolution{ GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN) };
     if (screen_resolution.first != 1920 || screen_resolution.second != 1080) {
         spdlog::error("screen resolution unsupported, feel free to change the positions tho");
+        std::this_thread::sleep_for(std::chrono::seconds(5));
 
+        return true;
+    }
+
+    if (!captcha::initialize()) {
+        spdlog::error("failed to initialize captcha");
         std::this_thread::sleep_for(std::chrono::seconds(5));
 
         return true;

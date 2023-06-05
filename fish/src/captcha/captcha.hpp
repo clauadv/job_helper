@@ -3,6 +3,38 @@
 #include <opencv2/opencv.hpp>
 
 namespace captcha {
+    bool initialize() {
+        HKEY key_handle{};
+        const auto key_name = std::string{ "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment" };
+
+        auto path = std::filesystem::path{ std::filesystem::current_path() / "tessdata" }.string();
+        std::replace(path.begin(), path.end(), '\\', '/');
+
+        const auto open_result = RegOpenKeyExA(HKEY_LOCAL_MACHINE, key_name.c_str(), 0, KEY_ALL_ACCESS, &key_handle);
+        if (open_result != ERROR_SUCCESS) {
+            spdlog::error("failed to open registry key");
+            return false;
+        }
+
+        const auto set_value_result = RegSetValueExA(key_handle, "TESSDATA_PREFIX", 0, REG_SZ, reinterpret_cast<const BYTE*>(path.c_str()), static_cast<unsigned long>(path.size() + 1));
+        if (set_value_result != ERROR_SUCCESS) {
+            spdlog::error("failed to set registry value");
+            RegCloseKey(key_handle);
+
+            return false;
+        }
+
+        const auto close_result = RegCloseKey(key_handle);
+        if (close_result != ERROR_SUCCESS) {
+            spdlog::error("failed to close registry key");
+            return false;
+        }
+
+        spdlog::info("set tessdata_prefix to {}", path);
+
+        return true;
+    }
+
 	inline bool solve(const HDC device_context, const std::pair<int, int> screen_resolution) {
         const auto pixel = GetPixel(device_context, 950, 410);
 

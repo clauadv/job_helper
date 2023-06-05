@@ -1,6 +1,7 @@
 #pragma once
 #include <windows.h>
 #include <winuser.h>
+#include <filesystem>
 
 // third_party/includes
 #include <spdlog/spdlog.h>
