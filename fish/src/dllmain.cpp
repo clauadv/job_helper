@@ -49,12 +49,19 @@ bool main() {
             resolved = false;
         }
 
-        const auto marker = shared::pixel::find_position_in_rectangle(device_context, { 1920, 700 });
+        static std::pair<int, int> marker{ 0, 0 };
+        if (!marker.first) {
+            marker = shared::pixel::find_position_in_rectangle(device_context, { 1920, 870 });
+        }
+
         if (marker.first) {
             spdlog::info("simulating key space");
             shared::input::simulate_key(VK_SPACE);
 
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+            spdlog::info("reset marker");
+            marker = { 0, 0 };
         }
 
         static std::pair<int, int> position{ 0, 0 };
@@ -62,24 +69,23 @@ bool main() {
             position = shared::pixel::find_position(device_context, { 812, 1027 }, { 300, 1 });
         }
 
-        if (!position.first)
-            continue;
+        if (position.first) {
+            const auto pixel = GetPixel(device_context, position.first, position.second);
 
-        const auto pixel = GetPixel(device_context, position.first, position.second);
+            shared::color::c_color<int> color{ (pixel >> 16) & 0xff, (pixel >> 8) & 0xff, pixel & 0xff };
+            if (color.r_between(221, 255) && color.g_between(150, 255) && color.b_between(200, 255)) {
+                spdlog::info("simulating key space");
+                shared::input::simulate_key(VK_SPACE);
 
-        shared::color::c_color<int> color{ (pixel >> 16) & 0xff, (pixel >> 8) & 0xff, pixel & 0xff };
-        if (color.r_between(221, 255) && color.g_between(150, 255) && color.b_between(200, 255)) {
-            spdlog::info("simulating key space");
-            shared::input::simulate_key(VK_SPACE);
+                spdlog::info("reset position");
+                position = { 0, 0 };
 
-            spdlog::info("reset position");
-            position = { 0, 0 };
+                spdlog::info("waiting 8 seconds before reeling the fishing rod again");
+                std::this_thread::sleep_for(std::chrono::seconds(8));
 
-            spdlog::info("waiting 8 seconds before reeling the fishing rod again");
-            std::this_thread::sleep_for(std::chrono::seconds(8));
-
-            spdlog::info("simulating key space \n");
-            shared::input::simulate_key(VK_SPACE);
+                spdlog::info("simulating key space \n");
+                shared::input::simulate_key(VK_SPACE);
+            }
         }
     }
 

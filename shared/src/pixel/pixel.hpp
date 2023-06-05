@@ -44,11 +44,9 @@ namespace shared::pixel {
         DeleteObject(handle_bitmap_target);
         DeleteDC(device_context_target);
 
-        for (int y = 0; y < size.second; y++) {
+        for (int y = 220; y < size.second; y++) {
             for (int x = 0; x < size.first; x++) {
                 const auto pixel = *reinterpret_cast<std::uint32_t*>(pixels.data() + (y * stride) + (x * 4));
-
-                // 21, 207, 30
 
                 shared::color::c_color<int> color{ (pixel >> 16) & 0xff, (pixel >> 8) & 0xff, pixel & 0xff };
                 if (color.r_between(15, 30) && color.g_between(200, 215) && color.b_between(20, 40)) {
