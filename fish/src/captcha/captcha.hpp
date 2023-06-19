@@ -2,8 +2,10 @@
 #include <baseapi.h>
 #include <opencv2/opencv.hpp>
 
-namespace captcha {
-    bool initialize() {
+namespace captcha
+{
+    bool initialize()
+    {
         HKEY key_handle{};
         const auto key_name = std::string{ "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment" };
 
@@ -11,13 +13,15 @@ namespace captcha {
         std::replace(path.begin(), path.end(), '\\', '/');
 
         const auto open_result = RegOpenKeyExA(HKEY_LOCAL_MACHINE, key_name.c_str(), 0, KEY_ALL_ACCESS, &key_handle);
-        if (open_result != ERROR_SUCCESS) {
+        if (open_result != ERROR_SUCCESS)
+        {
             spdlog::error("failed to open registry key");
             return false;
         }
 
         const auto set_value_result = RegSetValueExA(key_handle, "TESSDATA_PREFIX", 0, REG_SZ, reinterpret_cast<const BYTE*>(path.c_str()), static_cast<unsigned long>(path.size() + 1));
-        if (set_value_result != ERROR_SUCCESS) {
+        if (set_value_result != ERROR_SUCCESS)
+        {
             spdlog::error("failed to set registry value");
             RegCloseKey(key_handle);
 
@@ -25,7 +29,8 @@ namespace captcha {
         }
 
         const auto close_result = RegCloseKey(key_handle);
-        if (close_result != ERROR_SUCCESS) {
+        if (close_result != ERROR_SUCCESS)
+        {
             spdlog::error("failed to close registry key");
             return false;
         }
@@ -35,7 +40,8 @@ namespace captcha {
         return true;
     }
 
-	inline bool solve(const HDC device_context, const std::pair<int, int> screen_resolution) {
+    inline bool solve(const HDC device_context, const std::pair<int, int> screen_resolution)
+    {
         const auto pixel = GetPixel(device_context, 950, 410);
 
         shared::color::c_color<int> color{ (pixel >> 16) & 0xff, (pixel >> 8) & 0xff, pixel & 0xff };
@@ -70,7 +76,8 @@ namespace captcha {
 
         auto result = std::string{ tesseract.GetUTF8Text() };
 
-        if (!result.empty()) {
+        if (!result.empty())
+        {
             std::transform(result.begin(), result.end(), result.begin(), ::toupper);
 
             spdlog::info("setting cursor position");
@@ -91,7 +98,8 @@ namespace captcha {
         return false;
     }
 
-    inline bool failed(const HDC device_context, const std::pair<int, int> screen_resolution) {
+    inline bool failed(const HDC device_context, const std::pair<int, int> screen_resolution)
+    {
         const auto pixel = GetPixel(device_context, 44, 805);
 
         shared::color::c_color<int> color{ (pixel >> 16) & 0xff, (pixel >> 8) & 0xff, pixel & 0xff };
@@ -123,7 +131,8 @@ namespace captcha {
         tesseract.SetImage(processed_image.data, processed_image.cols, processed_image.rows, 1, processed_image.cols);
 
         const auto result = std::string{ tesseract.GetUTF8Text() };
-        if (result.contains("captcha.")) {
+        if (result.contains("captcha."))
+        {
             spdlog::info("captcha failed");
             return true;
         }
