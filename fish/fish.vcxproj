@@ -12,9 +12,6 @@
   <ItemGroup>
     <None Include="readme.md" />
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\captcha\captcha.hpp" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -44,8 +41,8 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)$(Configuration)\$(ProjectName)\intermediates\</IntDir>
-    <IncludePath>$(SolutionDir)\shared\;$(SolutionDir)\shared\third_party\spdlog\include\;C:\vcpkg\installed\x64-windows\include;C:\vcpkg\installed\x64-windows\include\leptonica;C:\vcpkg\installed\x64-windows\include\tesseract;C:\Program Files\OpenCV\opencv\build\include;C:\Program Files\OpenCV\opencv\build\include\opencv2;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)$(Configuration)\shared\;C:\Program Files\OpenCV\opencv\build\x64\vc16\lib;C:\vcpkg\installed\x64-windows\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\shared\;$(SolutionDir)\shared\third_party\spdlog\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)$(Configuration)\shared\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='production|x64'">
     <ClCompile>
@@ -75,7 +72,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opencv_world470.lib;tesseract53.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
     </Link>
   </ItemDefinitionGroup>

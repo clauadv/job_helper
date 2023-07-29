@@ -16,18 +16,17 @@ bool main()
 	}
 
 	// @todo: add support for all resolutions
+	SetProcessDPIAware();
 	const std::pair<int, int> screen_resolution{ GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN) };
 	if (screen_resolution.first != 1920 || screen_resolution.second != 1080)
 	{
-		spdlog::error("screen resolution unsupported, feel free to change the positions tho");
-
+		spdlog::error("your screen resolution ({}, {}) is unsupported, feel free to change the positions tho", screen_resolution.first, screen_resolution.second);
 		std::this_thread::sleep_for(std::chrono::seconds(5));
 
 		return true;
 	}
 
 	spdlog::info("waiting for job interface");
-
 
 	for (;;)
 	{

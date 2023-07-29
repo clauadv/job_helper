@@ -56,7 +56,7 @@ namespace shared::pixel
                 const auto pixel = *reinterpret_cast<std::uint32_t*>(pixels.data() + (y * stride) + (x * 4));
 
                 shared::color::c_color<int> color{ (pixel >> 16) & 0xff, (pixel >> 8) & 0xff, pixel & 0xff };
-                if (color == shared::color::c_color{ 21, 207, 30 })
+                if (color.r_between(17, 22) && color.g_between(230, 240) && color.b_between(230, 240))
                 {
                     spdlog::info("found color ({}, {}, {}) at ({}, {})", color.r, color.g, color.b, x + 15, y);
                     return { x + 15, y };
