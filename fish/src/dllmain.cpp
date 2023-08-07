@@ -73,9 +73,10 @@ bool main()
                 }
             }
         }
+    }
 
         ReleaseDC(nullptr, device_context);
 
         return false;
-    }
+    
 }
