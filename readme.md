@@ -14,5 +14,5 @@ if you have any questions, [discord server](https://discord.gg/K7RNp2vtVq)
 <details>
   <summary>fish</summary>
  
-  https://github.com/clauadv/job_helper/assets/26169415/e27418e3-7bd2-4ea7-a7af-90c8a16eaa5f
+  https://github.com/clauadv/job_helper/assets/26169415/0c0ac891-be3c-47f9-bdf5-7957da39fe6a
 </details>
