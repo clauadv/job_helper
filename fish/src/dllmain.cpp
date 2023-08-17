@@ -3,80 +3,79 @@
 
 bool main()
 {
-    spdlog::info("job_helper::fish @ github.com/clauadv/job_helper");
+    LOG_INFO("job_helper::fish @ github.com/clauadv/job_helper");
+    LOG_INFO("if you have any questions, https://discord.gg/K7RNp2vtVq \n");
 
     const auto device_context = GetDC(nullptr);
     if (!device_context)
     {
-        spdlog::error("failed to get device_context");
+        LOG_ERROR("failed to get device_context");
         std::this_thread::sleep_for(std::chrono::seconds(5));
 
         return true;
     }
 
     SetProcessDPIAware();
-    const std::pair<int, int> screen_resolution{ GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN) };
-    if (screen_resolution.first != 1920 || screen_resolution.second != 1080)
+
+    const auto screen_resolution = shared::c_vector2<int>{ GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN) };
+    if (screen_resolution.x != 1920 || screen_resolution.y != 1080)
     {
-        spdlog::error("your screen resolution ({}, {}) is unsupported, feel free to change the positions tho", screen_resolution.first, screen_resolution.second);
+        LOG_ERROR("your screen resolution (%d, %d) is unsupported", screen_resolution.x, screen_resolution.y);
         std::this_thread::sleep_for(std::chrono::seconds(5));
 
         return true;
     }
 
-    spdlog::info("waiting for job interface");
+    LOG_INFO("waiting for job interface");
 
     for (;;)
     {
-        static std::pair<int, int> marker{ 0, 0 };
-        if (!marker.first)
+        static auto marker_position = shared::c_vector2<int>{ 0, 0 };
+        if (marker_position.zero())
         {
-            marker = shared::pixel::find_position_in_rectangle(device_context, { 1920, 870 });
+            marker_position = shared::c_pixel::find_marker_position(device_context, shared::c_vector2<int>{ 1920, 870 });
         }
 
-        if (marker.first)
+        if (!marker_position.zero())
         {
-            spdlog::info("simulating key space");
-            shared::input::simulate_key(VK_SPACE);
+            LOG_INFO("simulating key space");
+            shared::c_input::simulate_key(VK_SPACE);
 
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
-            spdlog::info("reset marker");
-            marker = { 0, 0 };
+            LOG_INFO("reset marker position");
+            marker_position = { 0, 0 };
         }
 
-        static std::pair<int, int> position{ 0, 0 };
-        if (!position.first)
+        static auto skillcheck_position = shared::c_vector2<int>{ 0, 0 };
+        if (skillcheck_position.zero())
         {
-            position = shared::pixel::find_position(device_context, { 812, 1027 }, { 300, 1 });
+            skillcheck_position = shared::c_pixel::find_skillcheck_position(device_context, shared::c_vector2<int>{ 812, 1027 }, shared::c_vector2<int>{ 300, 1 });
         }
 
-        if (position.first)
+        if (!skillcheck_position.zero())
         {
-            const auto pixel = GetPixel(device_context, position.first, position.second);
+            const auto pixel = GetPixel(device_context, skillcheck_position.x, skillcheck_position.y);
 
-            shared::color::c_color<int> color{ (pixel >> 16) & 0xff, (pixel >> 8) & 0xff, pixel & 0xff };
-            if (color.r_between(221, 255) && color.g_between(150, 255) && color.b_between(200, 255))
+            auto color = shared::c_color<int>::get_pixel_color(pixel);
+            if (color.r_between(200, 255) && color.g_between(150, 255) && color.b_between(221, 255))
             {
-                {
-                    spdlog::info("simulating key space");
-                    shared::input::simulate_key(VK_SPACE);
+                LOG_INFO("simulating key space");
+                shared::c_input::simulate_key(VK_SPACE);
 
-                    spdlog::info("reset position");
-                    position = { 0, 0 };
+                LOG_INFO("reset skillcheck position");
+                skillcheck_position = { 0, 0 };
 
-                    spdlog::info("waiting 8 seconds before reeling the fishing rod again");
-                    std::this_thread::sleep_for(std::chrono::seconds(8));
+                LOG_INFO("waiting 8 seconds before reeling the fishing rod again");
+                std::this_thread::sleep_for(std::chrono::seconds(8));
 
-                    spdlog::info("simulating key space \n");
-                    shared::input::simulate_key(VK_SPACE);
-                }
+                LOG_INFO("simulating key space \n");
+                shared::c_input::simulate_key(VK_SPACE);
             }
         }
     }
 
-        ReleaseDC(nullptr, device_context);
+    ReleaseDC(nullptr, device_context);
 
-        return false;
-    
+    return false;
 }

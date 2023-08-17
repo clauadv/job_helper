@@ -1,36 +1,46 @@
 #pragma once
 
-namespace shared::color
+namespace shared
 {
-	template<typename t>
+	template<typename T>
 	class c_color
 	{
 	public:
-		t r, g, b;
+		T r, g, b;
 
-		inline bool operator==(const shared::color::c_color<t>& color) const
+		bool operator==(const shared::c_color<T>& color) const
 		{
 			return (this->r == color.r && this->g == color.g && this->b == color.b);
 		}
 
-		inline bool operator!=(const shared::color::c_color<t>& color) const
+		bool operator!=(const shared::c_color<T>& color) const
 		{
 			return !(operator==(color));
 		}
 
-		inline bool r_between(t min, t max)
+		bool r_between(T min, T max)
 		{
 			return this->r >= min && this->r <= max;
 		}
 
-		inline bool g_between(t min, t max)
+		bool g_between(T min, T max)
 		{
 			return this->g >= min && this->g <= max;
 		}
 
-		inline bool b_between(t min, t max)
+		bool b_between(T min, T max)
 		{
 			return this->b >= min && this->b <= max;
+		}
+
+		static shared::c_color<T> get_pixel_color(const COLORREF pixel, const bool inverse = false)
+		{
+			if (inverse)
+			{
+				return shared::c_color<T>{ GetBValue(pixel), GetGValue(pixel), GetRValue(pixel) };
+			}
+
+			return shared::c_color<T>{ GetRValue(pixel), GetGValue(pixel), GetBValue(pixel) };
 		}
 	};
 }
