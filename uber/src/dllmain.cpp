@@ -48,8 +48,8 @@ bool main()
                 static shared::c_vector2<int> position{ 1730, 960 };
                 const auto pixel = GetPixel(device_context, position.x, position.y);
 
-                const auto color = shared::c_color<int>::get_pixel_color(pixel);
-                if (color != shared::c_color{ 234, 236, 239 })
+                auto color = shared::c_color<int>::get_pixel_color(pixel);
+                if (!(color.r_between(230, 240) && color.g_between(230, 240) && color.b_between(235, 245)))
                     continue;
 
                 LOG_INFO("simulating left click on uber request");
@@ -96,8 +96,6 @@ bool main()
 
             case request_stages::close:
             {
-                LOG_INFO("request_stages::close");
-
                 LOG_INFO("closing uber menu \n");
                 shared::c_input::simulate_key(VK_ESCAPE);
 
