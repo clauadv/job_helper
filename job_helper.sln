@@ -9,17 +9,21 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fish", "fish\fish.vcxproj",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "electrician", "electrician\electrician.vcxproj", "{E04AE391-E517-4C11-BB9E-59F642D260AA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "uber", "uber\uber.vcxproj", "{8C6F8F5C-9DF7-4CB2-835B-49B9686AB52C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		release|x64 = release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8A4686DE-39DA-4D9F-AF41-091EB8032BDE}.release|x64.ActiveCfg = production|x64
-		{8A4686DE-39DA-4D9F-AF41-091EB8032BDE}.release|x64.Build.0 = production|x64
-		{9FB0C85F-98D9-47A0-B1E3-6277379CF6C9}.release|x64.ActiveCfg = production|x64
-		{9FB0C85F-98D9-47A0-B1E3-6277379CF6C9}.release|x64.Build.0 = production|x64
-		{E04AE391-E517-4C11-BB9E-59F642D260AA}.release|x64.ActiveCfg = production|x64
-		{E04AE391-E517-4C11-BB9E-59F642D260AA}.release|x64.Build.0 = production|x64
+		{8A4686DE-39DA-4D9F-AF41-091EB8032BDE}.release|x64.ActiveCfg = release|x64
+		{8A4686DE-39DA-4D9F-AF41-091EB8032BDE}.release|x64.Build.0 = release|x64
+		{9FB0C85F-98D9-47A0-B1E3-6277379CF6C9}.release|x64.ActiveCfg = release|x64
+		{9FB0C85F-98D9-47A0-B1E3-6277379CF6C9}.release|x64.Build.0 = release|x64
+		{E04AE391-E517-4C11-BB9E-59F642D260AA}.release|x64.ActiveCfg = release|x64
+		{E04AE391-E517-4C11-BB9E-59F642D260AA}.release|x64.Build.0 = release|x64
+		{8C6F8F5C-9DF7-4CB2-835B-49B9686AB52C}.release|x64.ActiveCfg = release|x64
+		{8C6F8F5C-9DF7-4CB2-835B-49B9686AB52C}.release|x64.Build.0 = release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
