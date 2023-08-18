@@ -4,7 +4,6 @@
 static enum class request_stages : int
 {
 	none,
-	found,
 	accept,
 	second_accept,
 	close,
@@ -40,77 +39,81 @@ bool main()
 
 	auto stage = request_stages::none;
 
-	for (;;)
-	{
-		if (stage == request_stages::none)
-		{
-			static shared::c_vector2<int> position{ 1730, 960 };
-			const auto pixel = GetPixel(device_context, position.x, position.y);
+    for (;;)
+    {
+        switch (stage)
+        {
+            case request_stages::none:
+            {
+                static shared::c_vector2<int> position{ 1730, 960 };
+                const auto pixel = GetPixel(device_context, position.x, position.y);
 
-			const auto color = shared::c_color<int>::get_pixel_color(pixel);
-			if (color != shared::c_color{ 234, 236, 239 })
-				continue;
+                const auto color = shared::c_color<int>::get_pixel_color(pixel);
+                if (color != shared::c_color{ 234, 236, 239 })
+                    continue;
 
-			LOG_INFO("simulating left click on uber request");
-			shared::c_input::simulate_click(position);
+                LOG_INFO("simulating left click on uber request");
+                shared::c_input::simulate_click(position);
 
-			std::this_thread::sleep_for(std::chrono::milliseconds(100));
-			stage = request_stages::found;
-		}
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                stage = request_stages::accept;
+                break;
+            }
 
-		if (stage == request_stages::found)
-		{
-			LOG_INFO("request_stages::found");
+            case request_stages::accept:
+            {
+                static shared::c_vector2<int> position{ 1720, 1008 };
+                const auto pixel = GetPixel(device_context, position.x, position.y);
 
-			static shared::c_vector2<int> position{ 1720, 1008 };
-			const auto pixel = GetPixel(device_context, position.x, position.y);
+                const auto color = shared::c_color<int>::get_pixel_color(pixel);
+                if (color != shared::c_color{ 1, 1, 1 })
+                    continue;
 
-			const auto color = shared::c_color<int>::get_pixel_color(pixel);
-			if (color != shared::c_color{ 1, 1, 1 })
-				continue;
+                LOG_INFO("accepting uber request");
+                shared::c_input::simulate_click(position);
 
-			LOG_INFO("accepting uber request");
-			shared::c_input::simulate_click(position);
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                stage = request_stages::second_accept;
+                break;
+            }
 
-			std::this_thread::sleep_for(std::chrono::milliseconds(100));
-			stage = request_stages::second_accept;
-		}
+            case request_stages::second_accept:
+            {
+                static shared::c_vector2<int> position{ 1730, 960 };
+                const auto pixel = GetPixel(device_context, position.x, position.y);
 
-		if (stage == request_stages::second_accept)
-		{
-			LOG_INFO("request_stages::second_accept");
+                const auto color = shared::c_color<int>::get_pixel_color(pixel);
+                if (color != shared::c_color{ 245, 245, 245 })
+                    continue;
 
-			static shared::c_vector2<int> position{ 1730, 960 };
-			const auto pixel = GetPixel(device_context, position.x, position.y);
+                LOG_INFO("accepting uber request again");
+                shared::c_input::simulate_click(position);
 
-			const auto color = shared::c_color<int>::get_pixel_color(pixel);
-			if (color != shared::c_color{ 245, 245, 245 })
-				continue;
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                stage = request_stages::close;
+                break;
+            }
 
-			LOG_INFO("accepting uber request again");
-			shared::c_input::simulate_click(position);
+            case request_stages::close:
+            {
+                LOG_INFO("request_stages::close");
 
-			std::this_thread::sleep_for(std::chrono::milliseconds(100));
-			stage = request_stages::close;
-		}
+                LOG_INFO("closing uber menu \n");
+                shared::c_input::simulate_key(VK_ESCAPE);
 
-		if (stage == request_stages::close)
-		{
-			LOG_INFO("request_stages::close");
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                stage = request_stages::done;
+                break;
+            }
 
-			LOG_INFO("closing uber menu \n");
-			shared::c_input::simulate_key(VK_ESCAPE);
-
-			std::this_thread::sleep_for(std::chrono::milliseconds(100));
-			stage = request_stages::done;
-		}
-
-		if (stage == request_stages::done)
-		{
-			stage = request_stages::none;
-			std::this_thread::sleep_for(std::chrono::seconds(1));
-		}
-	}
+            case request_stages::done:
+            {
+                stage = request_stages::none;
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+                break;
+            }
+        }
+    }
 
 	ReleaseDC(nullptr, device_context);
 
