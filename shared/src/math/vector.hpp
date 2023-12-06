@@ -6,11 +6,13 @@ namespace shared
 	class c_vector2
 	{
 	public:
-		T x, y;
+		T m_x, m_y;
 
 		bool zero() const
 		{
-			return (this->x == 0.f && this->y == 0.f);
+			return (this->m_x == 0.f && this->m_y == 0.f);
 		}
 	};
+
+	typedef c_vector2<int> ivector2;
 }

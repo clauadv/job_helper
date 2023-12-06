@@ -6,41 +6,43 @@ namespace shared
 	class c_color
 	{
 	public:
-		T r, g, b;
+		T m_r, m_g, m_b;
 
-		bool operator==(const shared::c_color<T>& color) const
+		bool operator==(const c_color<T>& color) const
 		{
-			return (this->r == color.r && this->g == color.g && this->b == color.b);
+			return (this->m_r == color.m_r && this->m_g == color.m_g && this->m_b == color.m_b);
 		}
 
-		bool operator!=(const shared::c_color<T>& color) const
+		bool operator!=(const c_color<T>& color) const
 		{
 			return !(operator==(color));
 		}
 
-		bool r_between(T min, T max)
+		bool r_between(T min, T max) const
 		{
-			return this->r >= min && this->r <= max;
+			return this->m_r >= min && this->m_r <= max;
 		}
 
-		bool g_between(T min, T max)
+		bool g_between(T min, T max) const
 		{
-			return this->g >= min && this->g <= max;
+			return this->m_g >= min && this->m_g <= max;
 		}
 
-		bool b_between(T min, T max)
+		bool b_between(T min, T max) const
 		{
-			return this->b >= min && this->b <= max;
+			return this->m_b >= min && this->m_b <= max;
 		}
 
-		static shared::c_color<T> get_pixel_color(const COLORREF pixel, const bool inverse = false)
+		static c_color<T> get_pixel_color(const COLORREF pixel, const bool inverse = false)
 		{
 			if (inverse)
 			{
-				return shared::c_color<T>{ GetBValue(pixel), GetGValue(pixel), GetRValue(pixel) };
+				return c_color<T>{ GetBValue(pixel), GetGValue(pixel), GetRValue(pixel) };
 			}
 
-			return shared::c_color<T>{ GetRValue(pixel), GetGValue(pixel), GetBValue(pixel) };
+			return c_color<T>{ GetRValue(pixel), GetGValue(pixel), GetBValue(pixel) };
 		}
 	};
+
+	typedef c_color<int> icolor;
 }
