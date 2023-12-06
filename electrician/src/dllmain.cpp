@@ -43,15 +43,15 @@ bool main()
 			for (const auto& position : positions)
 			{
 				const auto pixel_position = GetPixel(device_context, position.m_x, position.m_y);
-				
+
 				const auto position_color = shared::icolor::get_pixel_color(pixel_position);
-				if (position_color.r_between(152, 157) && position_color.g_between(160, 165) && position_color.b_between(172, 177))
+				if (position_color.r_between(152, 157) && position_color.g_between(160, 165) && position_color.b_between(170, 175))
 					continue;
 				
 				LOG("simulating left click at (%d, %d)", position.m_x, position.m_y);
 				shared::c_input::simulate_click(position);
 
-				this_thread::sleep_for(chrono::milliseconds(50));
+				this_thread::sleep_for(chrono::milliseconds(250));
 			}
 		}
 	}
