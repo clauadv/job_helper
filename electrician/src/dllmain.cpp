@@ -6,6 +6,8 @@ bool main()
 	LOG("job_helper::electrician @ github.com/clauadv/job_helper");
 	LOG("if you have any questions, https://discord.gg/K7RNp2vtVq \n");
 
+	SetProcessDPIAware();
+
 	const auto device_context = GetDC(nullptr);
 	if (!device_context)
 	{
@@ -15,7 +17,12 @@ bool main()
 		return true;
 	}
 
-	SetProcessDPIAware();
+	struct dc_guard
+	{
+		HDC dc;
+		~dc_guard() { if (dc) { ReleaseDC(nullptr, dc); } }
+	};
+	const dc_guard guard{ device_context };
 
 	const auto screen_resolution = shared::ivector2{ GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN) };
 	if (screen_resolution.m_x != 1920 || screen_resolution.m_y != 1080)
@@ -30,12 +37,17 @@ bool main()
 
 	for (;;)
 	{
+		const auto interface_pixel = GetPixel(device_context, 873, 280);
+		const auto interface_color = shared::icolor::get_pixel_color(interface_pixel);
+		if (interface_color.m_r != 255 && interface_color.m_g != 255 && interface_color.m_b != 255)
+			continue;
+
 		const auto pixel = GetPixel(device_context, 761, 393);
 	
 		const auto color = shared::icolor::get_pixel_color(pixel);
 		if (color.r_between(110, 140) && color.g_between(120, 150) && color.b_between(120, 160))
 		{
-			static vector<shared::ivector2> positions = {
+			static const vector<shared::ivector2> positions = {
 				{ 757, 440 }, { 823, 440 }, { 889, 440 }, { 955, 440 }, { 1021, 440 }, { 1087, 440 }, { 1153, 440 },
 				{ 757, 560 }, { 823, 560 }, { 889, 560 }, { 955, 560 }, { 1021, 560 }, { 1087, 560 }, { 1153, 560 }
 			};
@@ -51,12 +63,14 @@ bool main()
 				LOG("simulating left click at (%d, %d)", position.m_x, position.m_y);
 				shared::c_input::simulate_click(position);
 
-				this_thread::sleep_for(chrono::milliseconds(250));
+				this_thread::sleep_for(chrono::milliseconds(750));
 			}
 		}
+		else
+		{
+			this_thread::sleep_for(chrono::milliseconds(10));
+		}
 	}
-
-	ReleaseDC(nullptr, device_context);
 
 	return false;
 }
